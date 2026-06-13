@@ -38,11 +38,3 @@ helm install common-storage nfs-subdir-external-provisioner/nfs-subdir-external-
     --set storageClass.accessModes=ReadWriteMany \
     --set storageClass.defaultClass=true
 ```
-
-# Cloudflare
-```bash
-kubectl create secret generic traefik-acme-secrets \
-  --namespace kube-system \
-  --from-literal=cf-token="YOUR_CLOUDFLARE_API_TOKEN" \
-  --from-literal=email="your-email-address@example.com"
-```
