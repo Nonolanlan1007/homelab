@@ -1,0 +1,59 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    ingressRoute:
+      dashboard:
+        enabled: true
+        matchRule: Host(`traefik.lazyduck.fr`)
+        entryPoints:
+          - websecure
+        tls:
+          certResolver: cloudflare
+        middlewares:
+          - name: internal-only
+            namespace: kube-system
+
+    providers:
+      kubernetesGateway:
+        enabled: true
+      kubernetesCRD:
+        allowCrossNamespace: true
+    
+    gateway:
+      listeners:
+        web:
+          namespacePolicy:
+            from: All
+    
+    certificatesResolvers:
+      cloudflare:
+        acme:
+          email: nolhan.dev@gmail.com
+          storage: /data/acme.json
+          caServer: https://acme-v02.api.letsencrypt.org/directory
+          dnsChallenge:
+            provider: cloudflare
+            resolvers:
+              - "1.1.1.1:53"
+              - "1.0.0.1:53"
+    
+    env:
+      - name: CF_DNS_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: traefik-acme-secrets
+            key: cf-token
+    
+    persistence:
+      enabled: true
+      path: /data
+      size: 128Mi
+    
+    additionalArguments:
+      - --entryPoints.web.http.redirections.entryPoint.to=websecure
+      - --entryPoints.web.http.redirections.entryPoint.scheme=https
+      - --entryPoints.web.http.redirections.entryPoint.permanent=true
