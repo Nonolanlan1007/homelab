@@ -29,3 +29,6 @@ spec:
             protocol: TCP
           - containerPort: 9443
             protocol: TCP              
+        volumeMounts:
+          - name: data
+            mountPath: /data
