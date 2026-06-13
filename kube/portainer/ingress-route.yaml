@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`portainer.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: portainer
+          port: 9000
+      middlewares:
+        - name: internal-only
+          namespace: kube-system

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: portainer-deployment
+   labels:
+      app: portainer
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+      matchLabels:
+        app: portainer
+  template:
+    metadata:
+      labels:
+        app: portainer
+    spec:
+      serviceAccountName: portainer-sa-clusteradmin
+      volumes:
+        - name: "data"
+          persistentVolumeClaim:
+            claimName: portainer-pv-claim
+      containers:
+      - name: portainer
+        image: portainer/portainer-ce:2.42.0
+        ports:
+          - containerPort: 9000
+            protocol: TCP
+          - containerPort: 9443
+            protocol: TCP              
