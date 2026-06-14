@@ -17,6 +17,14 @@ spec:
           - name: internal-only
             namespace: kube-system
 
+    ports:
+      dns:
+        port: 1053
+        exposedPort: 53
+        protocol: UDP
+        expose:
+          default: true
+
     providers:
       kubernetesGateway:
         enabled: true

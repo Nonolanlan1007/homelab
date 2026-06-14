@@ -36,5 +36,7 @@ helm install common-storage nfs-subdir-external-provisioner/nfs-subdir-external-
     --set storageClass.name=common-storage-client \
     --set storageClass.provisionerName=k8s-sigs.io/common-storage \
     --set storageClass.accessModes=ReadWriteMany \
+    --set storageClass.reclaimPolicy=Retain \
+    --set storageClass.pathPattern='${.PVC.name}' \
     --set storageClass.defaultClass=true
 ```

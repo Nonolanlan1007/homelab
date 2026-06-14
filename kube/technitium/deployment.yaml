@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: technitium-deployment
+   labels:
+      app: technitium
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+      matchLabels:
+        app: technitium
+  template:
+    metadata:
+      labels:
+        app: technitium
+    spec:
+      volumes:
+      - name: "technitium-storage"
+        persistentVolumeClaim:
+          claimName: technitium-pv-claim
+      containers:
+      - name: technitium
+        image: technitium/dns-server:15.2.0
+        env:
+        - name: DNS_SERVER_DOMAIN
+          value: technitium.lazyduck.fr
+        - name: DNS_SERVER_LOG_FOLDER_PATH
+          value: /var/log/technitium/dns
+        ports:
+          - containerPort: 53
+            protocol: UDP
+          - containerPort: 5380
+            protocol: TCP        
+        volumeMounts:
+          - name: technitium-storage
+            mountPath: /etc/dns
+            subPath: config
+          - name: technitium-storage
+            mountPath: /var/log/technitium/dns
+            subPath: logs

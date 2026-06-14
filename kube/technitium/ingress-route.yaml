@@ -1,0 +1,32 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: technitium
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`technitium.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: technitium
+          port: 5380
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
+
+---
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: technitium
+spec:
+  entryPoints:
+    - dns
+  routes:
+  - services:
+    - name: technitium
+      port: 53
