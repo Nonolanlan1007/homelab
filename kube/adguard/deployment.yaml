@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: adguard-deployment
+   labels:
+      app: adguard
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: adguard
+  template:
+    metadata:
+      labels:
+        app: adguard
+    spec:
+      volumes:
+      - name: "adguard-storage"
+        persistentVolumeClaim:
+          claimName: adguard-pv-claim
+      containers:
+      - name: adguard
+        image: adguard/adguardhome:v0.107.77
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+        ports:
+          - containerPort: 53
+            protocol: UDP
+          - containerPort: 81
+            protocol: TCP        
+        volumeMounts:
+          - name: adguard-storage
+            mountPath: /opt/adguardhome/conf
+            subPath: conf
+          - name: adguard-storage
+            mountPath: /opt/adguardhome/work
+            subPath: work
