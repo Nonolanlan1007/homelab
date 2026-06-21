@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: grafana-deployment
+   labels:
+      app: grafana
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      volumes:
+      - name: "grafana-storage"
+        persistentVolumeClaim:
+          claimName: grafana-pv-claim
+      containers:
+      - name: grafana
+        image: grafana/grafana:11.6.15
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        ports:
+          - containerPort: 300
+            protocol: TCP
+        volumeMounts:
+          - name: grafana-storage
+            mountPath: /var/lib/grafana
+        env:
+          - name: GF_SERVER_DOMAIN
+            value: grafana.lazyduck.fr
+          - name: GF_SERVER_ROOT_URL
+            value: "https://grafana.lazyduck.fr"

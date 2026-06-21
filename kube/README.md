@@ -40,3 +40,14 @@ helm install common-storage nfs-subdir-external-provisioner/nfs-subdir-external-
     --set storageClass.pathPattern='${.PVC.name}' \
     --set storageClass.defaultClass=true
 ```
+
+## Monitoring Support (kube-state-metrics)
+
+To feed Kubernetes resource state metrics (like pod phases, container restarts, node conditions) to Prometheus, you must deploy `kube-state-metrics` in the cluster:
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install kube-state-metrics prometheus-community/kube-state-metrics -n kube-system
+```
+
