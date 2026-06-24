@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: grafana-pv-claim
 spec:
-  storageClassName: common-storage-client
+  storageClassName: longhorn-retain
   accessModes:
     - ReadWriteOnce
   resources:

@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: prometheus-pv-claim
 spec:
-  storageClassName: common-storage-client
+  storageClassName: longhorn-retain
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi
+      storage: 15Gi

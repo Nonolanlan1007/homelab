@@ -60,6 +60,7 @@ spec:
       enabled: true
       path: /data
       size: 128Mi
+      storageClass: longhorn-retain
     
     additionalArguments:
       - --entryPoints.web.http.redirections.entryPoint.to=websecure

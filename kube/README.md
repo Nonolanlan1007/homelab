@@ -17,28 +17,10 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=<YOUR_NODE_TOKEN> sh -s - server --serv
 
 ## Storage configuration
 
-To store permanent data, I use an external NFS server which allows me to have shared storage between all my nodes.
-Add helm repo
+To store permanent data, I use LongHorn which allows me to have shared storage between all my nodes. Long Horn requires a package to be installed on every node:
 ```bash
-helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-```
-
-Install NFS on each node:
-```bash
-sudo dnf install nfs-utils -y
-```
-
-Add Common storage
-```bash
-helm install common-storage nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-    --set nfs.server=X.X.X.X \
-    --set nfs.path=/nfs/path \
-    --set storageClass.name=common-storage-client \
-    --set storageClass.provisionerName=k8s-sigs.io/common-storage \
-    --set storageClass.accessModes=ReadWriteMany \
-    --set storageClass.reclaimPolicy=Retain \
-    --set storageClass.pathPattern='${.PVC.name}' \
-    --set storageClass.defaultClass=true
+sudo dnf install iscsi-initiator-utils -y
+sudo systemctl enable --now iscsid
 ```
 
 ## Monitoring Support (kube-state-metrics)

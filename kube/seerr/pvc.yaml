@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: seerr-pv-claim
 spec:
-  storageClassName: common-storage-client
+  storageClassName: longhorn-retain
   accessModes:
     - ReadWriteOnce
   resources:
