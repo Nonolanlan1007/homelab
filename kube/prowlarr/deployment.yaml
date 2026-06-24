@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: prowlarr-deployment
+   labels:
+      app: prowlarr
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      volumes:
+        - name: "prowlarr-config"
+          persistentVolumeClaim:
+            claimName: prowlarr-pv-claim
+      containers:
+      - name: prowlarr
+        image: linuxserver/prowlarr:2.4.0
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 9696
+            protocol: TCP
+        volumeMounts:
+          - name: prowlarr-config
+            mountPath: /config
