@@ -6,11 +6,6 @@ metadata:
       app: prometheus
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
   selector:
       matchLabels:
         app: prometheus
@@ -35,6 +30,10 @@ spec:
       containers:
         - name: prometheus
           image: prom/prometheus:v3.5.4
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--storage.tsdb.retention.size=10GB"
           resources:
             requests:
               cpu: "100m"
