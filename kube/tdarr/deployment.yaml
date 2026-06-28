@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: tdarr-deployment
+   labels:
+      app: tdarr
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: tdarr
+  template:
+    metadata:
+      labels:
+        app: tdarr
+    spec:
+      volumes:
+      - name: "tdarr-storage"
+        persistentVolumeClaim:
+          claimName: tdarr-data-pv-claim
+      - name: "tdarr-medias"
+        persistentVolumeClaim:
+          claimName: jellyfin-medias-pv-claim
+      containers:
+      - name: tdarr
+        image: ghcr.io/haveagitgat/tdarr:2.81.01 
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - name: webui
+            containerPort: 8265
+            protocol: TCP    
+          - name: server
+            containerPort: 8266
+            protocol: TCP        
+        env:
+          - name: serverIP
+            value: 0.0.0.0
+          - name: serverPort
+            value: '8266'
+          - name: webUIPort
+            value: '8265'
+          - name: internalNode
+            value: 'false'
+          - name: auth
+            value: 'false'
+          - name: openBrowser
+            value: 'true'
+          - name: maxLogSizeMB
+            value: '10'
+          - name: cronPluginUpdate
+            value: ''
+
+        volumeMounts:
+          - name: tdarr-storage
+            mountPath: /app/server
+            subPath: server
+          - name: tdarr-storage
+            mountPath: /app/configs
+            subPath: configs
+          - name: tdarr-storage
+            mountPath: /app/logs
+            subPath: logs
+          - name: tdarr-medias
+            mountPath: /media

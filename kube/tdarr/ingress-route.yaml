@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tdarr
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`tdarr.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: tdarr
+          port: 8265
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
+    - match: Host(`server.tdarr.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: tdarr
+          port: 8266
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
