@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: sonarr-deployment
+   labels:
+      app: sonarr
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      volumes:
+      - name: "sonarr-storage"
+        persistentVolumeClaim:
+          claimName: sonarr-data-pv-claim
+      - name: "sonarr-medias"
+        persistentVolumeClaim:
+          claimName: jellyfin-medias-pv-claim
+      - name: "sonarr-downloads"
+        persistentVolumeClaim:
+          claimName: qbittorrent-downloads-pv-claim
+      containers:
+      - name: sonarr
+        image: linuxserver/sonarr:4.0.19
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 8989
+            protocol: TCP        
+        volumeMounts:
+          - name: sonarr-storage
+            mountPath: /config
+          - name: sonarr-medias
+            mountPath: /tv
+            subPath: Shows
+          - name: sonarr-downloads
+            mountPath: /downloads
