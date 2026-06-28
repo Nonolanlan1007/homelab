@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: qbittorrent-deployment
+   labels:
+      app: qbittorrent
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      volumes:
+      - name: "qbittorrent-storage"
+        persistentVolumeClaim:
+          claimName: qbittorrent-pv-claim
+      - name: "qbittorrent-downloads"
+        persistentVolumeClaim:
+          claimName: qbittorrent-downloads-pv-claim
+      containers:
+      - name: protonvpn
+        image: docker.io/qmcgaw/gluetun:latest
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        envFrom:
+        - secretRef:
+            name: qbittorrent-secrets
+        env:
+        - name: TZ
+          value: "Europe/Paris"
+        - name: VPN_SERVICE_PROVIDER
+          value: "protonvpn"
+        - name: VPN_TYPE
+          value: "openvpn"
+        - name: SERVER_COUNTRIES
+          value: "France"
+        - name: VPN_PORT_FORWARDING
+          value: "on"
+        - name: PORT_FORWARD_ONLY
+          value: "on"
+        - name: FIREWALL_OUTBOUND_SUBNETS
+          value: "10.42.0.0/16,10.43.0.0/16,192.168.0.0/16,172.16.0.0/12"
+        - name: VPN_PORT_FORWARDING_UP_COMMAND
+          value: "/bin/sh -c '/usr/bin/wget -O- --retry-connrefused --post-data \"json={\\\"listen_port\\\":{{PORTS}}}\" http://127.0.0.1:8080/api/v2/app/setPreferences 2>&1'"
+        volumeMounts:
+          - name: qbittorrent-storage
+            mountPath: /gluetun
+            subPath: vpn
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
+        env:
+        - name: WEBUI_PORT
+          value: "8080"
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        volumeMounts:
+          - name: qbittorrent-storage
+            mountPath: /config
+            subPath: config
+          - name: qbittorrent-storage
+            mountPath: /webui
+            subPath: vuetorrent
+          - name: qbittorrent-downloads
+            mountPath: /downloads
