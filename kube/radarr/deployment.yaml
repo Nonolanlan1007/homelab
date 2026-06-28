@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: radarr-deployment
+   labels:
+      app: radarr
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+      matchLabels:
+        app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      volumes:
+      - name: "radarr-storage"
+        persistentVolumeClaim:
+          claimName: radarr-data-pv-claim
+      - name: "radarr-medias"
+        persistentVolumeClaim:
+          claimName: jellyfin-medias-pv-claim
+      - name: "radarr-downloads"
+        persistentVolumeClaim:
+          claimName: qbittorrent-downloads-pv-claim
+      containers:
+      - name: radarr
+        image: linuxserver/radarr:6.2.1
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 7878
+            protocol: TCP        
+        volumeMounts:
+          - name: radarr-storage
+            mountPath: /config
+          - name: radarr-medias
+            mountPath: /movies
+            subPath: Movies
+          - name: radarr-downloads
+            mountPath: /downloads
