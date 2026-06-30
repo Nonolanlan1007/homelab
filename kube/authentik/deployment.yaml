@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentik
+  labels:
+    app: authentik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentik
+  template:
+    metadata:
+      labels:
+        app: authentik
+    spec:
+      containers:
+      - name: postgresql
+        image: docker.io/library/postgres:16-alpine
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        envFrom:
+        - secretRef:
+            name: authentik-secrets
+        env:
+        - name: POSTGRES_DB
+          value: "authentik"
+        - name: POSTGRES_USER
+          value: "authentik"
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/postgresql/data
+          subPath: postgresql
+
+      - name: redis
+        image: docker.io/library/redis:alpine
+        command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+          subPath: redis
+
+      - name: server
+        image: ghcr.io/goauthentik/server:2026.5.3
+        args: ["server"]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        envFrom:
+        - secretRef:
+            name: authentik-secrets
+        env:
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: "localhost"
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          value: "authentik"
+        - name: AUTHENTIK_POSTGRESQL__USER
+          value: "authentik"
+        - name: AUTHENTIK_REDIS__HOST
+          value: "localhost"
+        ports:
+        - containerPort: 9000
+        - containerPort: 9443
+        volumeMounts:
+        - name: storage
+          mountPath: /media
+          subPath: media
+        - name: storage
+          mountPath: /templates
+          subPath: templates
+
+      - name: worker
+        image: ghcr.io/goauthentik/server:2026.5.3
+        args: ["worker"]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        envFrom:
+        - secretRef:
+            name: authentik-secrets
+        env:
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: "localhost"
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          value: "authentik"
+        - name: AUTHENTIK_POSTGRESQL__USER
+          value: "authentik"
+        - name: AUTHENTIK_REDIS__HOST
+          value: "localhost"
+        volumeMounts:
+        - name: storage
+          mountPath: /media
+          subPath: media
+        - name: storage
+          mountPath: /certs
+          subPath: certs
+        - name: storage
+          mountPath: /templates
+          subPath: templates
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: authentik-pv-claim
