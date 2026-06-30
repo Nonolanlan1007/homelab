@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: loki
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`loki.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: loki
+          port: 3100

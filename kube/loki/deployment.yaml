@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki-deployment
+  labels:
+    app: loki
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      securityContext:
+        fsGroup: 10001
+        runAsUser: 10001
+        runAsNonRoot: true
+      volumes:
+        - name: loki-storage
+          persistentVolumeClaim:
+            claimName: loki-pv-claim-v2
+        - name: loki-config
+          configMap:
+            name: loki-config
+      containers:
+        - name: loki
+          image: grafana/loki:3.7.3
+          args:
+            - "-config.file=/etc/loki/loki.yaml"
+            - "-config.expand-env=true"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+          ports:
+            - containerPort: 3100
+              protocol: TCP
+          env:
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: loki-s3-secret
+                  key: access_key
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: loki-s3-secret
+                  key: secret_key
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: loki-s3-secret
+                  key: endpoint
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: loki-s3-secret
+                  key: bucket_name
+          volumeMounts:
+            - name: loki-storage
+              mountPath: /loki
+            - name: loki-config
+              mountPath: /etc/loki
