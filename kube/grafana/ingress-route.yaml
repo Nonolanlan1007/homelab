@@ -13,6 +13,3 @@ spec:
       services:
         - name: grafana
           port: 3000
-      middlewares:
-        - name: internal-only
-          namespace: kube-system

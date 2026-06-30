@@ -61,8 +61,14 @@ spec:
       path: /data
       size: 128Mi
       storageClass: longhorn-retain
+
+    service:
+      spec:
+        externalTrafficPolicy: Local
     
     additionalArguments:
       - --entryPoints.web.http.redirections.entryPoint.to=websecure
       - --entryPoints.web.http.redirections.entryPoint.scheme=https
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
+      - "--entryPoints.web.forwardedHeaders.insecure"
+      - "--entryPoints.websecure.forwardedHeaders.insecure"
