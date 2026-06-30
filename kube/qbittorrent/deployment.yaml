@@ -7,10 +7,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+    type: Recreate
   selector:
       matchLabels:
         app: qbittorrent
@@ -22,7 +19,7 @@ spec:
       volumes:
       - name: "qbittorrent-storage"
         persistentVolumeClaim:
-          claimName: qbittorrent-pv-claim
+          claimName: qbittorrent-pv-claim-v2
       - name: "qbittorrent-downloads"
         persistentVolumeClaim:
           claimName: qbittorrent-downloads-pv-claim
@@ -60,6 +57,10 @@ spec:
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
         - name: WEBUI_PORT
           value: "8080"
         ports:
