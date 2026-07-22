@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: affine-deployment
+   labels:
+      app: affine
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: affine
+  template:
+    metadata:
+      labels:
+        app: affine
+    spec:
+      volumes:
+      - name: "affine-uploads"
+        persistentVolumeClaim:
+          claimName: affine-uploads-pvc
+      - name: "affine-data"
+        persistentVolumeClaim:
+          claimName: affine-data-pvc
+      initContainers:
+      - name: redis
+        image: redis:8.8.0
+        restartPolicy: Always
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        startupProbe:
+          exec:
+            command:
+              - redis-cli
+              - --raw
+              - incr
+              - ping
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 10
+      - name: db
+        image: pgvector/pgvector:pg16
+        restartPolicy: Always
+        envFrom:
+        - secretRef:
+            name: affine-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 5432
+            protocol: TCP
+        volumeMounts:
+          - name: affine-data
+            mountPath: /var/lib/postgresql/data
+            subPath: pgdata
+        startupProbe:
+          exec:
+            command:
+              - pg_isready
+              - -U
+              - affine
+              - -d
+              - affine
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 10
+      - name: migration
+        image: ghcr.io/toeverything/affine:0.27.1
+        command: ["node"]
+        args: ["./scripts/self-host-predeploy.js"]
+        envFrom:
+        - secretRef:
+            name: affine-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        volumeMounts:
+          - name: affine-uploads
+            mountPath: /root/.affine/storage
+          - name: affine-data
+            mountPath: /root/.affine/config
+            subPath: config
+      containers:
+      - name: server
+        image: ghcr.io/toeverything/affine:0.27.1
+        envFrom:
+        - secretRef:
+            name: affine-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 3010
+            protocol: TCP
+        volumeMounts:
+          - name: affine-uploads
+            mountPath: /root/.affine/storage
+          - name: affine-data
+            mountPath: /root/.affine/config
+            subPath: config
