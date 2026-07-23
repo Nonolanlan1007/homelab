@@ -1,0 +1,50 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: seafile
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`seafile.lazyduck.fr`) && PathPrefix(`/sdoc-server`)
+      kind: Rule
+      priority: 30
+      services:
+        - name: seadoc
+          port: 80
+      middlewares:
+        - name: seafile-sdoc-stripprefix
+        - name: internal-only
+          namespace: kube-system
+
+    - match: Host(`seafile.lazyduck.fr`) && PathPrefix(`/socket.io`)
+      kind: Rule
+      priority: 20
+      services:
+        - name: seadoc
+          port: 80
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
+
+    - match: Host(`seafile.lazyduck.fr`) && HeaderRegexp(`Upgrade`, `websocket`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: seadoc
+          port: 80
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
+
+    - match: Host(`seafile.lazyduck.fr`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: seafile
+          port: 80
+      middlewares:
+        - name: internal-only
+          namespace: kube-system

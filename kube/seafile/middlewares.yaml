@@ -1,0 +1,8 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: seafile-sdoc-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /sdoc-server

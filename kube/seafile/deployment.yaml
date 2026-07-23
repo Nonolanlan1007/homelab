@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seafile-deployment
+  labels:
+    app: seafile
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: seafile
+  template:
+    metadata:
+      labels:
+        app: seafile
+    spec:
+      enableServiceLinks: false
+      volumes:
+      - name: local-data
+        persistentVolumeClaim:
+          claimName: seafile-mysql-pv-claim
+      - name: seafile-data
+        persistentVolumeClaim:
+          claimName: seafile-data-pv-claim
+      containers:
+      - name: seafile
+        image: seafileltd/seafile-mc:13.0.18
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: seafile-secrets
+        env:
+          - name: SEAFILE_SERVER_PROTOCOL
+            value: https
+          - name: SEADOC_SERVER_URL
+            value: $(SEAFILE_SERVER_PROTOCOL)://$(SEAFILE_SERVER_HOSTNAME)/sdoc-server
+          - name: SEAFILE_MYSQL_DB_HOST
+            value: 127.0.0.1
+          - name: SEAFILE_MYSQL_DB_USER
+            value: seafile
+          - name: SEAFILE_MYSQL_DB_CCNET_DB_NAME
+            value: ccnet_db
+          - name: SEAFILE_MYSQL_DB_SEAFILE_DB_NAME
+            value: seafile_db
+          - name: SEAFILE_MYSQL_DB_SEAHUB_DB_NAME
+            value: seahub_db
+          - name: TIME_ZONE
+            value: Europe/Paris
+          - name: SITE_ROOT
+            value: /
+          - name: NON_ROOT
+            value: "false"
+          - name: SEAFILE_LOG_TO_STDOUT
+            value: "false"
+          - name: ENABLE_GO_FILESERVER
+            value: "true"
+          - name: ENABLE_SEADOC
+            value: "true"
+          - name: CACHE_PROVIDER
+            value: redis
+          - name: REDIS_HOST
+            value: localhost
+          - name: REDIS_PORT
+            value: "6379"
+          - name: ENABLE_NOTIFICATION_SERVER
+            value: "false"
+          - name: ENABLE_SEAFILE_AI
+            value: "false"
+          - name: MD_FILE_COUNT_LIMIT
+            value: "100000"
+        volumeMounts:
+          - name: seafile-data
+            mountPath: /shared
+
+      - name: redis
+        image: redis:8.6.1
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+
+      - name: db
+        image: mariadb:10.11
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: seafile-secrets
+                key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+          - name: MYSQL_LOG_CONSOLE
+            value: "true"
+          - name: MARIADB_AUTO_UPGRADE
+            value: "1"
+        volumeMounts:
+          - name: local-data
+            mountPath: /var/lib/mysql
+            subPath: mysql

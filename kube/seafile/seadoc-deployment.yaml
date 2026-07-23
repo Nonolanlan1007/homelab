@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seadoc-deployment
+  labels:
+    app: seadoc
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: seadoc
+  template:
+    metadata:
+      labels:
+        app: seadoc
+    spec:
+      enableServiceLinks: false
+      volumes:
+      - name: seadoc-data
+        persistentVolumeClaim:
+          claimName: seadoc-data-pv-claim
+      containers:
+      - name: seadoc
+        image: seafileltd/sdoc-server:2.0.9
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: seafile-secrets
+        env:
+          - name: DB_HOST
+            value: seafile-db
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_USER
+            value: seafile
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: seafile-secrets
+                key: SEAFILE_MYSQL_DB_PASSWORD
+          - name: DB_NAME
+            value: seahub_db
+          - name: TIME_ZONE
+            value: Europe/Paris
+          - name: NON_ROOT
+            value: "false"
+          - name: SEAFILE_SERVER_PROTOCOL
+            value: https
+          - name: SEAHUB_SERVICE_URL
+            value: $(SEAFILE_SERVER_PROTOCOL)://$(SEAFILE_SERVER_HOSTNAME)
+        volumeMounts:
+          - name: seadoc-data
+            mountPath: /shared
