@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-deployment
+  labels:
+    app: paperless
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: paperless
+  template:
+    metadata:
+      labels:
+        app: paperless
+    spec:
+      enableServiceLinks: false
+      volumes:
+      - name: local-data
+        persistentVolumeClaim:
+          claimName: paperless-local-pv-claim
+      - name: documents-data
+        persistentVolumeClaim:
+          claimName: paperless-documents-pv-claim
+      containers:
+      - name: paperless
+        image: paperlessngx/paperless-ngx:3.0.0
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "1Gi"
+        ports:
+          - containerPort: 8000
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: paperless-secrets
+        env:
+          - name: PAPERLESS_TIME_ZONE
+            value: Europe/Paris
+          - name: PAPERLESS_OCR_LANGUAGE
+            value: fra
+          - name: PAPERLESS_OCR_LANGUAGES
+            value: eng
+          - name: PAPERLESS_REDIS
+            value: redis://localhost:6379
+          - name: PAPERLESS_APPS
+            value: allauth.socialaccount.providers.openid_connect
+          - name: PAPERLESS_AUTO_CREATE
+            value: "true"
+        volumeMounts:
+          - name: local-data
+            mountPath: /usr/src/paperless/data
+            subPath: data
+          - name: local-data
+            mountPath: /usr/src/paperless/consume
+            subPath: consume
+          - name: local-data
+            mountPath: /usr/src/paperless/export
+            subPath: export
+          - name: documents-data
+            mountPath: /usr/src/paperless/media
+
+      - name: broker
+        image: redis:7
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+        volumeMounts:
+          - name: local-data
+            mountPath: /data
+            subPath: redis
