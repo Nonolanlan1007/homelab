@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden-deployment
+  labels:
+    app: vaultwarden
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: vaultwarden-data-pv-claim
+      containers:
+      - name: vaultwarden
+        image: vaultwarden/server:1.36.0
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: vaultwarden-secrets
+        env:
+          - name: SIGNUPS_ALLOWED
+            value: "false"
+          - name: SSO_ENABLED
+            value: "true"
+          - name: SSO_SCOPES
+            value: '"openid email profile offline_access"'
+        volumeMounts:
+          - name: data
+            mountPath: /data
