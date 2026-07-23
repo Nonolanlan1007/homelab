@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mermaid-deployment
+  labels:
+    app: mermaid
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: mermaid
+  template:
+    metadata:
+      labels:
+        app: mermaid
+    spec:
+      containers:
+      - name: mermaid
+        image: ghcr.io/mermaid-js/mermaid-live-editor:latest
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+        ports:
+          - containerPort: 8080
+            protocol: TCP
