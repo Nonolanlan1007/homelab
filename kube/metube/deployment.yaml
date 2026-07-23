@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metube-deployment
+  labels:
+    app: metube
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: metube
+  template:
+    metadata:
+      labels:
+        app: metube
+    spec:
+      volumes:
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: metube-downloads-pv-claim
+      containers:
+      - name: metube
+        image: ghcr.io/alexta69/metube:2026.07.21
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 8081
+            protocol: TCP
+        env:
+          - name: DELETE_FILE_ON_TRASHCAN
+            value: "true"
+        volumeMounts:
+          - name: downloads
+            mountPath: /downloads
