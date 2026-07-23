@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkwarden-deployment
+  labels:
+    app: linkwarden
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: linkwarden
+  template:
+    metadata:
+      labels:
+        app: linkwarden
+    spec:
+      volumes:
+      - name: local-data
+        persistentVolumeClaim:
+          claimName: linkwarden-local-pv-claim
+      - name: linkwarden-data
+        persistentVolumeClaim:
+          claimName: linkwarden-data-pv-claim
+      containers:
+      - name: linkwarden
+        image: ghcr.io/linkwarden/linkwarden:v2.14.1
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: linkwarden-secrets
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: linkwarden-secrets
+                key: POSTGRES_PASSWORD
+          - name: DATABASE_URL
+            value: postgresql://postgres:$(POSTGRES_PASSWORD)@localhost:5432/postgres
+          - name: NEXT_PUBLIC_DISABLE_REGISTRATION
+            value: "true"
+          - name: DISABLE_NEW_SSO_USERS
+            value: "false"
+          - name: NEXT_PUBLIC_AUTHENTIK_ENABLED
+            value: "true"
+          - name: AUTHENTIK_CUSTOM_NAME
+            value: Authentik
+          - name: MEILI_HOST
+            value: http://localhost:7700
+        volumeMounts:
+          - name: linkwarden-data
+            mountPath: /data/data
+
+      - name: postgres
+        image: postgres:16-alpine
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: linkwarden-secrets
+                key: POSTGRES_PASSWORD
+        volumeMounts:
+          - name: local-data
+            mountPath: /var/lib/postgresql/data
+            subPath: postgres
+
+      - name: meilisearch
+        image: getmeili/meilisearch:v1.12.8
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        volumeMounts:
+          - name: local-data
+            mountPath: /meili_data
+            subPath: meilisearch
