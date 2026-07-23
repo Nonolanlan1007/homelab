@@ -15,6 +15,11 @@ spec:
     spec:
       hostNetwork: true
       hostPID: true
+      tolerations:
+      - key: dedicated
+        operator: Equal
+        value: longhorn
+        effect: NoSchedule
       volumes:
       - hostPath:
           path: /sys

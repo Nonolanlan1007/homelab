@@ -10,3 +10,6 @@ spec:
   failurePolicy: abort
   targetNamespace: longhorn-system
   createNamespace: true
+  valuesContent: |-
+    defaultSettings:
+      taintToleration: dedicated=longhorn:NoSchedule
