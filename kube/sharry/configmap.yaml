@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sharry-config
+data:
+  sharry.conf: |
+    sharry.restserver {
+
+      base-url = ${?SHARRY_BASE_URL}
+
+      bind {
+        address = "0.0.0.0"
+        port = 9090
+      }
+
+      backend {
+        auth {
+          fixed.enabled = true ## enabled admin:admin access
+          oauth {
+            "authentik" = {
+              enabled       = true
+              name          = "Authentik"
+              icon          = "fab fa-user"
+              authorize-url = ${?SHARRY_OAUTH_AUTHORIZE_URL}
+              token-url     = ${?SHARRY_OAUTH_TOKEN_URL}
+              user-url      = ${?SHARRY_OAUTH_USER_URL}
+              user-id-key   = "preferred_username"
+              user-email-key= "email"
+              scope         = "openid email profile"
+              client-id     = ${?SHARRY_OAUTH_CLIENT_ID}
+              client-secret = ${?SHARRY_OAUTH_CLIENT_SECRET}
+              order         = 10
+            }
+          }
+        }
+
+        jdbc {
+          url = "jdbc:postgresql://localhost:5432/sharry"
+          user = "sharry"
+          password = ${?POSTGRES_PASSWORD}
+        }
+
+        signup {
+          mode = "invite"
+          invite-time = "14 days"
+          invite-password = ${?SHARRY_INVITE_PASSWORD}
+        }
+
+        mail {
+          enabled = true
+
+          smtp {
+            host = ${?SHARRY_SMTP_HOST}
+            port = 465
+
+            user = ${?SHARRY_SMTP_USER}
+            password = ${?SHARRY_SMTP_PASSWORD}
+
+            ssl-type = "starttls"
+            check-certificates = true
+            timeout = "10 seconds"
+            default-from = ${?SHARRY_SMTP_FROM}
+            list-id = "Sharry"
+          }
+
+          templates = {
+            download = {
+              subject = "Download ready."
+              body = """Hello,
+              there are some files for you to download. Visit this link:
+              {{{url}}}
+              {{#password}}
+              The required password will be sent by other means.
+              {{/password}}
+              Greetings,
+              {{user}} via Sharry
+              """
+            }
+
+            alias = {
+              subject = "Link for Upload"
+              body = """Hello,
+              please use the following link to sent files to me:
+              {{{url}}}
+              Greetings,
+              {{user}} via Sharry
+              """
+            }
+
+            upload-notify = {
+              subject = "[Sharry] Files arrived"
+              body = """Hello {{user}},
+              there have been files uploaded for you via the alias '{{aliasName}}'.
+              View it here:
+              {{{url}}}
+              Greetings,
+              Sharry
+              """
+            }
+          }
+        }
+      }
+
+      files {
+        default-store = "filesystem"
+
+        stores = {
+          database =
+            { enabled = false
+              type = "default-database"
+            }
+
+          filesystem =
+            { enabled = true
+              type = "file-system"
+              directory = "/opt/sharry-data"
+              clean-empty-dirs = true
+            }
+        }
+      }
+    }

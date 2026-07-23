@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sharry-deployment
+  labels:
+    app: sharry
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: sharry
+  template:
+    metadata:
+      labels:
+        app: sharry
+    spec:
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: sharry-postgres-pv-claim
+      - name: sharry-data
+        persistentVolumeClaim:
+          claimName: sharry-data-pv-claim
+      - name: config
+        configMap:
+          name: sharry-config
+      containers:
+      - name: restserver
+        image: eikek0/sharry:v1.15.0
+        args: ["/opt/sharry.conf"]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+        ports:
+          - containerPort: 9090
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: sharry-secrets
+        volumeMounts:
+          - name: config
+            mountPath: /opt/sharry.conf
+            subPath: sharry.conf
+          - name: sharry-data
+            mountPath: /opt/sharry-data
+
+      - name: db
+        image: postgres:17
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        envFrom:
+          - secretRef:
+              name: sharry-secrets
+        env:
+          - name: POSTGRES_USER
+            value: sharry
+          - name: POSTGRES_DB
+            value: sharry
+          - name: PGUSER
+            value: sharry
+        volumeMounts:
+          - name: postgres-data
+            mountPath: /var/lib/postgresql/data
