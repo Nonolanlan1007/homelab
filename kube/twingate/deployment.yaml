@@ -24,7 +24,7 @@ spec:
         image: twingate/connector:1.89.0
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "256Mi"
         env:
         - name: TWINGATE_NETWORK

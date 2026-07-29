@@ -35,7 +35,7 @@ spec:
             - "-config.expand-env=true"
           resources:
             requests:
-              cpu: "100m"
+              cpu: "20m"
               memory: "256Mi"
           ports:
             - containerPort: 3100

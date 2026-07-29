@@ -24,7 +24,7 @@ spec:
         image: ghcr.io/mermaid-js/mermaid-live-editor:latest
         resources:
           requests:
-            cpu: "50m"
+            cpu: "10m"
             memory: "64Mi"
         ports:
           - containerPort: 8080

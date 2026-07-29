@@ -28,7 +28,7 @@ spec:
         image: actualbudget/actual-server:26.7.0
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "128Mi"
         ports:
           - containerPort: 5006

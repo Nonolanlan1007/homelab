@@ -31,7 +31,7 @@ spec:
         image: jellyfin/jellyfin:10.11.11
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "512Mi"
         ports:
           - containerPort: 8096

@@ -36,7 +36,7 @@ spec:
             - "--storage.tsdb.retention.size=10GB"
           resources:
             requests:
-              cpu: "100m"
+              cpu: "20m"
               memory: "256Mi"
           ports:
             - containerPort: 9090

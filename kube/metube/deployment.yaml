@@ -28,7 +28,7 @@ spec:
         image: ghcr.io/alexta69/metube:2026.07.21
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "128Mi"
         ports:
           - containerPort: 8081

@@ -32,7 +32,7 @@ spec:
         image: paperlessngx/paperless-ngx:3.0.0
         resources:
           requests:
-            cpu: "300m"
+            cpu: "60m"
             memory: "1Gi"
         ports:
           - containerPort: 8000
@@ -70,7 +70,7 @@ spec:
         image: redis:7
         resources:
           requests:
-            cpu: "50m"
+            cpu: "10m"
             memory: "64Mi"
         volumeMounts:
           - name: local-data

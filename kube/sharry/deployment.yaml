@@ -35,7 +35,7 @@ spec:
         args: ["/opt/sharry.conf"]
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "256Mi"
         ports:
           - containerPort: 9090
@@ -54,7 +54,7 @@ spec:
         image: postgres:17
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "128Mi"
         envFrom:
           - secretRef:

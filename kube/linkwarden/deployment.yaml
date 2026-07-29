@@ -31,7 +31,7 @@ spec:
         image: ghcr.io/linkwarden/linkwarden:v2.14.1
         resources:
           requests:
-            cpu: "200m"
+            cpu: "40m"
             memory: "512Mi"
         ports:
           - containerPort: 3000
@@ -65,7 +65,7 @@ spec:
         image: postgres:16-alpine
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "256Mi"
         env:
           - name: POSTGRES_PASSWORD
@@ -82,7 +82,7 @@ spec:
         image: getmeili/meilisearch:v1.12.8
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "256Mi"
         volumeMounts:
           - name: local-data

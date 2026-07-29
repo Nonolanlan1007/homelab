@@ -28,7 +28,7 @@ spec:
         image: adguard/adguardhome:v0.107.77
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "512Mi"
         ports:
           - containerPort: 53

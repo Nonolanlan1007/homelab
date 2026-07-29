@@ -32,7 +32,7 @@ spec:
         image: seafileltd/seafile-mc:13.0.18
         resources:
           requests:
-            cpu: "200m"
+            cpu: "40m"
             memory: "512Mi"
         ports:
           - containerPort: 80
@@ -87,14 +87,14 @@ spec:
         image: redis:8.6.1
         resources:
           requests:
-            cpu: "50m"
+            cpu: "10m"
             memory: "64Mi"
 
       - name: db
         image: mariadb:10.11
         resources:
           requests:
-            cpu: "200m"
+            cpu: "40m"
             memory: "512Mi"
         env:
           - name: MYSQL_ROOT_PASSWORD

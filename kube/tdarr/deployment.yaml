@@ -26,7 +26,7 @@ spec:
         image: ghcr.io/haveagitgat/tdarr:2.85.01 
         resources:
           requests:
-            cpu: "100m"
+            cpu: "20m"
             memory: "128Mi"
         ports:
           - name: webui
