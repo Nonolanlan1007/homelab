@@ -52,7 +52,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - 10.0.5.10-10.0.5.20
+    - 10.0.1.10-10.0.1.10
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -71,10 +71,11 @@ This ensures Traefik sees the real client IP instead of the pod/node IP.
 
 ## Storage configuration
 
-To store permanent data, I use LongHorn which allows me to have shared storage between all my nodes. Long Horn requires a package to be installed on every node:
+To store permanent data, I use k3s's bundled `rancher.io/local-path` provisioner via a custom `local-path-retain` StorageClass (`kube/local-path/storage-class.yaml`, `reclaimPolicy: Retain` so deleting a PVC never silently deletes its data). No extra provisioner install is needed — it ships with k3s. Since it's backed by a hostPath directory on whichever node the consuming pod first lands on (`volumeBindingMode: WaitForFirstConsumer`), a PVC's data is pinned to that node from then on; this is a non-issue on a single-node cluster, but matters if more nodes get added later.
+
+Several apps also mount statically-provisioned NFS `PersistentVolume`s (backed by a NAS). Every node needs the NFS client installed:
 ```bash
-sudo dnf install iscsi-initiator-utils -y
-sudo systemctl enable --now iscsid
+sudo dnf install -y nfs-utils
 ```
 
 ## Monitoring Support (kube-state-metrics)
