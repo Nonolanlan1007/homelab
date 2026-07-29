@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: radarr-data-pv-claim-v2
 spec:
-  storageClassName: longhorn-retain
+  storageClassName: local-path-retain
   accessModes:
     - ReadWriteOnce
   resources:

@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: affine-data-pvc
 spec:
-  storageClassName: longhorn-retain
+  storageClassName: local-path-retain
   accessModes:
     - ReadWriteOnce
   resources:

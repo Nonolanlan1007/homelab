@@ -60,7 +60,7 @@ spec:
       enabled: true
       path: /data
       size: 128Mi
-      storageClass: longhorn-retain
+      storageClass: local-path-retain
 
     service:
       spec:

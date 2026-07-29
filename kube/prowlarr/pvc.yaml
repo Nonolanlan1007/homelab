@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: prowlarr-pv-claim
 spec:
-  storageClassName: longhorn-retain
+  storageClassName: local-path-retain
   accessModes:
     - ReadWriteOnce
   resources:
