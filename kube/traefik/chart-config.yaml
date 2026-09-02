@@ -72,3 +72,4 @@ spec:
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
       - "--entryPoints.web.forwardedHeaders.insecure"
       - "--entryPoints.websecure.forwardedHeaders.insecure"
+      - "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=600s"
