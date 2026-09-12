@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: matomo-cron
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: "matomo-storage"
+            persistentVolumeClaim:
+              claimName: matomo-pv-claim
+          containers:
+          - name: matomo-archive
+            image: matomo:5.13.0
+            imagePullPolicy: IfNotPresent
+            command:
+              - php
+              - /var/www/html/console
+              - core:archive
+            volumeMounts:
+              - name: matomo-storage
+                mountPath: /var/www/html
+                subPath: app
+          restartPolicy: OnFailure

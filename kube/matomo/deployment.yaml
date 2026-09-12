@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: matomo-deployment
+   labels:
+      app: matomo
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: matomo
+  template:
+    metadata:
+      labels:
+        app: matomo
+    spec:
+      volumes:
+      - name: "matomo-storage"
+        persistentVolumeClaim:
+          claimName: matomo-pv-claim
+      containers:
+      - name: app
+        image: matomo:5.13.0
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "128Mi"
+        envFrom:
+          - secretRef:
+              name: matomo-secrets
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: matomo-storage
+            mountPath: /var/www/html
+            subPath: app
+      - name: db
+        image: mariadb:12.3.3
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "128Mi"
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: matomo-secrets
+                key: MATOMO_DATABASE_PASSWORD
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: matomo-secrets
+                key: MATOMO_DATABASE_DBNAME
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: matomo-secrets
+                key: MATOMO_DATABASE_USERNAME
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: matomo-secrets
+                key: MATOMO_DATABASE_PASSWORD
+        volumeMounts:
+          - name: matomo-storage
+            mountPath: /var/lib/mysql
+            subPath: db
