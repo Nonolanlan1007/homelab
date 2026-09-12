@@ -31,7 +31,7 @@ spec:
           name: sharry-config
       containers:
       - name: restserver
-        image: eikek0/sharry:v1.15.0
+        image: eikek0/sharry:v1.16.0@sha256:ed2922390300557f036fc9ae4d9588184c74551dface0150ae130f4238f1017a
         args: ["/opt/sharry.conf"]
         resources:
           requests:

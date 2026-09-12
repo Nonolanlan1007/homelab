@@ -40,7 +40,7 @@ spec:
           mountPath: /var/lib/postgresql/data
       
       - name: synapse
-        image: matrixdotorg/synapse:latest
+        image: matrixdotorg/synapse:latest@sha256:1231c84d217f290e73db498f46a9af52aaafa38015502b4ebb7c111c8d097196
         envFrom:
         - secretRef:
             name: matrix-secrets
@@ -51,7 +51,7 @@ spec:
           mountPath: /data
       
       - name: nginx-well-known
-        image: nginx:alpine
+        image: nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
         ports:
         - containerPort: 8080
         volumeMounts:
