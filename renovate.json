@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["local>nolhan/renovate-config"],
+  "ignoreTests": true,
   "kubernetes": {
     "managerFilePatterns": ["/(^|/)deployment\\.ya?ml$/"]
   }
