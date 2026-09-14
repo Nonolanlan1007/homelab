@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgresql
-        image: docker.io/library/postgres:16-alpine
+        image: docker.io/library/postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685
         resources:
           requests:
             cpu: "20m"
@@ -47,7 +47,7 @@ spec:
           subPath: redis
 
       - name: server
-        image: ghcr.io/goauthentik/server:2026.5.3
+        image: ghcr.io/goauthentik/server:2026.8.2@sha256:ff8489a5af4f4fe415ffd180a8e3c10b120bc2592d13d79dac050d977f7b9ecd
         args: ["server"]
         resources:
           requests:
@@ -77,7 +77,7 @@ spec:
           subPath: templates
 
       - name: worker
-        image: ghcr.io/goauthentik/server:2026.5.3
+        image: ghcr.io/goauthentik/server:2026.8.2@sha256:ff8489a5af4f4fe415ffd180a8e3c10b120bc2592d13d79dac050d977f7b9ecd
         args: ["worker"]
         resources:
           requests:

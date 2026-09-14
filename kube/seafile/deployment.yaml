@@ -84,14 +84,14 @@ spec:
             mountPath: /shared
 
       - name: redis
-        image: redis:8.6.1
+        image: redis:8.10.1@sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5
         resources:
           requests:
             cpu: "10m"
             memory: "64Mi"
 
       - name: db
-        image: mariadb:10.11
+        image: mariadb:10.11@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41
         resources:
           requests:
             cpu: "40m"
