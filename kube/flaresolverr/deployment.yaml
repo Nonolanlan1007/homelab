@@ -22,7 +22,7 @@ spec:
       enableServiceLinks: false
       containers:
       - name: flaresolverr
-        image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
+        image: ghcr.io/flaresolverr/flaresolverr:v3.5.2
         resources:
           requests:
             cpu: "20m"

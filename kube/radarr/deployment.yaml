@@ -28,7 +28,7 @@ spec:
           claimName: qbittorrent-downloads-pv-claim
       containers:
       - name: radarr
-        image: linuxserver/radarr:6.2.1
+        image: linuxserver/radarr:6.3.0
         env:
         - name: PUID
           value: "1000"

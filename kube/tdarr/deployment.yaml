@@ -23,7 +23,7 @@ spec:
           claimName: jellyfin-medias-pv-claim
       containers:
       - name: tdarr
-        image: ghcr.io/haveagitgat/tdarr:2.85.01 
+        image: ghcr.io/haveagitgat/tdarr:2.87.01 
         resources:
           requests:
             cpu: "20m"

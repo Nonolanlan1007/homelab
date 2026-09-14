@@ -25,7 +25,7 @@ spec:
           claimName: grafana-pv-claim
       containers:
       - name: grafana
-        image: grafana/grafana:11.6.15
+        image: grafana/grafana:11.6.16
         resources:
           requests:
             cpu: "20m"

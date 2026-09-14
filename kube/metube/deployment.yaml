@@ -25,7 +25,7 @@ spec:
           claimName: metube-downloads-pv-claim
       containers:
       - name: metube
-        image: ghcr.io/alexta69/metube:2026.07.21
+        image: ghcr.io/alexta69/metube:2026.08.28
         resources:
           requests:
             cpu: "20m"

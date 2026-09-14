@@ -23,7 +23,7 @@ spec:
           claimName: affine-data-pvc
       initContainers:
       - name: redis
-        image: redis:8.8.0
+        image: redis:8.10.1
         restartPolicy: Always
         resources:
           requests:
@@ -70,7 +70,7 @@ spec:
           timeoutSeconds: 5
           failureThreshold: 10
       - name: migration
-        image: ghcr.io/toeverything/affine:0.27.1
+        image: ghcr.io/toeverything/affine:0.27.4
         command: ["node"]
         args: ["./scripts/self-host-predeploy.js"]
         envFrom:
@@ -88,7 +88,7 @@ spec:
             subPath: config
       containers:
       - name: server
-        image: ghcr.io/toeverything/affine:0.27.1
+        image: ghcr.io/toeverything/affine:0.27.4
         envFrom:
         - secretRef:
             name: affine-secrets

@@ -25,7 +25,7 @@ spec:
           claimName: qbittorrent-downloads-pv-claim
       containers:
       - name: protonvpn
-        image: docker.io/qmcgaw/gluetun:latest
+        image: docker.io/qmcgaw/gluetun:v3.41.3
         securityContext:
           capabilities:
             add:
@@ -55,7 +55,7 @@ spec:
             mountPath: /gluetun
             subPath: vpn
       - name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:latest
+        image: lscr.io/linuxserver/qbittorrent:5.2.3
         env:
         - name: PUID
           value: "1000"

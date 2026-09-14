@@ -84,7 +84,7 @@ spec:
             mountPath: /shared
 
       - name: redis
-        image: redis:8.6.1
+        image: redis:8.10.1
         resources:
           requests:
             cpu: "10m"
