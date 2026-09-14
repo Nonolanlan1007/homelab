@@ -4,5 +4,12 @@
   "ignoreTests": true,
   "kubernetes": {
     "managerFilePatterns": ["/(^|/)deployment\\.ya?ml$/"]
-  }
+  },
+  "packageRules": [
+    {
+      "description": "Override shared config: don't pin docker images to a digest, tag-only updates",
+      "matchDatasources": ["docker"],
+      "pinDigests": false
+    }
+  ]
 }

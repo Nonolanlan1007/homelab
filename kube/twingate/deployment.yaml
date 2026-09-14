@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: twingate
-        image: twingate/connector:1.92.0@sha256:b7049dbf2c105c837cd0cd199fb4d07b1799e45a6de2481bcfc4e0fb51074539
+        image: twingate/connector:1.92.0
         resources:
           requests:
             cpu: "20m"
