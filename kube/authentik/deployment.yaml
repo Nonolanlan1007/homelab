@@ -47,7 +47,7 @@ spec:
           subPath: redis
 
       - name: server
-        image: ghcr.io/goauthentik/server:2026.8.2
+        image: ghcr.io/goauthentik/server:2026.8.3
         args: ["server"]
         resources:
           requests:
@@ -77,7 +77,7 @@ spec:
           subPath: templates
 
       - name: worker
-        image: ghcr.io/goauthentik/server:2026.8.2
+        image: ghcr.io/goauthentik/server:2026.8.3
         args: ["worker"]
         resources:
           requests:
