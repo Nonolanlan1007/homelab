@@ -28,7 +28,7 @@ spec:
           claimName: qbittorrent-downloads-pv-claim
       containers:
       - name: sonarr
-        image: linuxserver/sonarr:4.0.19
+        image: linuxserver/sonarr:4.0.20
         env:
         - name: PUID
           value: "1000"

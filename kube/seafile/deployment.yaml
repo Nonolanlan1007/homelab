@@ -29,7 +29,7 @@ spec:
           claimName: seafile-data-pv-claim
       containers:
       - name: seafile
-        image: seafileltd/seafile-mc:13.0.25
+        image: seafileltd/seafile-mc:13.0.28
         resources:
           requests:
             cpu: "40m"
@@ -91,7 +91,7 @@ spec:
             memory: "64Mi"
 
       - name: db
-        image: mariadb:12.2
+        image: mariadb:12.3
         resources:
           requests:
             cpu: "40m"
