@@ -63,7 +63,7 @@ spec:
         resources:
           requests:
             cpu: "20m"
-            memory: "256Mi"
+            memory: "128Mi"
         env:
           - name: POSTGRES_PASSWORD
             valueFrom:
@@ -83,7 +83,7 @@ spec:
         resources:
           requests:
             cpu: "20m"
-            memory: "256Mi"
+            memory: "128Mi"
         volumeMounts:
           - name: local-data
             mountPath: /meili_data

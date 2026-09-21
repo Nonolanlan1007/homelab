@@ -33,7 +33,7 @@ spec:
         resources:
           requests:
             cpu: "60m"
-            memory: "1Gi"
+            memory: "512Gi"
         ports:
           - containerPort: 8000
             protocol: TCP
