@@ -3,7 +3,7 @@
   "extends": ["local>nolhan/renovate-config"],
   "ignoreTests": true,
   "kubernetes": {
-    "managerFilePatterns": ["/(^|/)deployment\\.ya?ml$/"]
+    "managerFilePatterns": ["/(^|/)(deployment|cronjobs)\\.ya?ml$/"]
   },
   "packageRules": [
     {
