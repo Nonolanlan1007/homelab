@@ -55,7 +55,7 @@ spec:
             mountPath: /usr/src/app/upload
 
       - name: immich-machine-learning
-        image: ghcr.io/immich-app/immich-machine-learning:v3.2.0
+        image: ghcr.io/immich-app/immich-machine-learning:v3.2.2
         resources:
           requests:
             cpu: "40m"
