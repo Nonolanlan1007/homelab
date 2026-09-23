@@ -1,0 +1,19 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  namespace: kube-system
+  name: harbor-chart
+spec:
+  targetNamespace: harbor-system
+  createNamespace: true
+  version: 1.19.2
+  chart: harbor
+  repo: https://helm.goharbor.io
+  valuesContent: |-
+    expose:
+      tls:
+        enabled: false
+      ingress:
+        hosts:
+          core: harbor.lazyduck.fr
+    externalURL: https://harbor.lazyduck.fr
