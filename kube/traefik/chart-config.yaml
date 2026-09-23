@@ -24,6 +24,12 @@ spec:
         protocol: UDP
         expose:
           default: true
+      websecure:
+        transport:
+          respondingTimeouts:
+            readTimeout: 600s
+            writeTimeout: 600s
+            idleTimeout: 600s
 
     providers:
       kubernetesGateway:
@@ -65,11 +71,10 @@ spec:
     service:
       spec:
         externalTrafficPolicy: Local
-    
+
     additionalArguments:
       - --entryPoints.web.http.redirections.entryPoint.to=websecure
       - --entryPoints.web.http.redirections.entryPoint.scheme=https
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
       - "--entryPoints.web.forwardedHeaders.insecure"
       - "--entryPoints.websecure.forwardedHeaders.insecure"
-      - "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=600s"
