@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: convertx-deployment
+  labels:
+    app: convertx
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: convertx
+  template:
+    metadata:
+      labels:
+        app: convertx
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: convertx-pv-claim
+      containers:
+      - name: convertx
+        image: ghcr.io/c4illin/convertx:v0.19.0
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "128Mi"
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        envFrom:
+          - secretRef:
+              name: convertx-secrets
+        volumeMounts:
+          - name: data
+            mountPath: ./data

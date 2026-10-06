@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: convertx
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`convertx.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: convertx
+          port: 3000
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
