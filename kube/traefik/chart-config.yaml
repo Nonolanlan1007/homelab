@@ -24,7 +24,14 @@ spec:
         protocol: UDP
         expose:
           default: true
+      web:
+        proxyProtocol:
+          trustedIPs:
+            - 10.0.2.67/32
       websecure:
+        proxyProtocol:
+          trustedIPs:
+            - 10.0.2.67/32
         transport:
           respondingTimeouts:
             readTimeout: 600s
@@ -36,13 +43,13 @@ spec:
         enabled: true
       kubernetesCRD:
         allowCrossNamespace: true
-    
+
     gateway:
       listeners:
         web:
           namespacePolicy:
             from: All
-    
+
     certificatesResolvers:
       cloudflare:
         acme:
@@ -76,5 +83,3 @@ spec:
       - --entryPoints.web.http.redirections.entryPoint.to=websecure
       - --entryPoints.web.http.redirections.entryPoint.scheme=https
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
-      - "--entryPoints.web.forwardedHeaders.insecure"
-      - "--entryPoints.websecure.forwardedHeaders.insecure"
