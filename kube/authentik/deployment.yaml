@@ -6,6 +6,8 @@ metadata:
     app: authentik
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: authentik
@@ -14,6 +16,7 @@ spec:
       labels:
         app: authentik
     spec:
+      terminationGracePeriodSeconds: 120
       containers:
       - name: postgresql
         image: docker.io/library/postgres:16-alpine
@@ -51,8 +54,11 @@ spec:
         args: ["server"]
         resources:
           requests:
-            cpu: "20m"
-            memory: "256Mi"
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
         envFrom:
         - secretRef:
             name: authentik-secrets
@@ -95,6 +101,12 @@ spec:
           value: "authentik"
         - name: AUTHENTIK_REDIS__HOST
           value: "localhost"
+        - name: AUTHENTIK_LISTEN__HTTP
+          value: "127.0.0.1:0"
+        - name: AUTHENTIK_LISTEN__HTTPS
+          value: "127.0.0.1:0"
+        - name: AUTHENTIK_LISTEN__METRICS
+          value: "127.0.0.1:0"
         volumeMounts:
         - name: storage
           mountPath: /media
