@@ -26,7 +26,7 @@ spec:
           claimName: immich-library-pv-claim
       containers:
       - name: immich-server
-        image: ghcr.io/immich-app/immich-server:v3.2.2
+        image: ghcr.io/immich-app/immich-server:v3.3.1
         resources:
           requests:
             cpu: "40m"
@@ -55,7 +55,7 @@ spec:
             mountPath: /usr/src/app/upload
 
       - name: immich-machine-learning
-        image: ghcr.io/immich-app/immich-machine-learning:v3.2.2
+        image: ghcr.io/immich-app/immich-machine-learning:v3.3.1
         resources:
           requests:
             cpu: "40m"
@@ -64,6 +64,9 @@ spec:
           - name: local-data
             mountPath: /cache
             subPath: model-cache
+        env:
+          - name: MACHINE_LEARNING_MODEL_REVISION
+            value: v2
 
       - name: redis
         image: redis:6.2-alpine
