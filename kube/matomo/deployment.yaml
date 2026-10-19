@@ -20,7 +20,7 @@ spec:
           claimName: matomo-pv-claim
       containers:
       - name: app
-        image: matomo:5.13.0
+        image: matomo:5.14.0
         resources:
           requests:
             cpu: "20m"
