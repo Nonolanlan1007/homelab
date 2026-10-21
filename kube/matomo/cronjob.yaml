@@ -14,7 +14,7 @@ spec:
               claimName: matomo-pv-claim
           containers:
           - name: matomo-archive
-            image: matomo:5.13.0
+            image: matomo:5.14.0
             imagePullPolicy: IfNotPresent
             command:
               - php
