@@ -94,10 +94,11 @@ spec:
             name: affine-secrets
         resources:
           requests:
-            cpu: "20m"
-            memory: "128Mi"
+            cpu: "100m"
+            memory: "384Mi"
           limits:
-            memory: "1.5Gi"
+            cpu: "1"
+            memory: "1Gi"
         ports:
           - containerPort: 3010
             protocol: TCP
