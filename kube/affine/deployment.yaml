@@ -6,9 +6,11 @@ metadata:
       app: affine
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
-      matchLabels:
-        app: affine
+    matchLabels:
+      app: affine
   template:
     metadata:
       labels:
