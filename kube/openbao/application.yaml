@@ -12,10 +12,10 @@ spec:
       helm:
         releaseName: openbao
         valueFiles:
-          - $basedir/values.yaml
+          - $repo/kube/openbao/values.yaml
     - repoURL: https://gitea.lazyduck.fr/nolhan/homelab
       targetRevision: HEAD
-      ref: basedir
+      ref: repo
       path: kube/openbao
       directory:
         include: ingress-route.yaml
