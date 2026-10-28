@@ -42,7 +42,7 @@ kubectl wait -n metallb-system deployment controller --for=condition=Available -
 
 ### Configure MetalLB
 
-Apply `kube/traefik/metallb-config.yaml`. The IP pool must be a range of free, unassigned IPs that are outside your DHCP pool and not assigned to any node:
+Apply `platform/traefik/metallb-config.yaml`. The IP pool must be a range of free, unassigned IPs that are outside your DHCP pool and not assigned to any node:
 
 ```yaml
 apiVersion: metallb.io/v1beta1
@@ -64,14 +64,14 @@ metadata:
 ### Configure Traefik for source IP preservation
 
 ```bash
-kubectl apply -f kube/traefik/
+kubectl apply -f platform/traefik/
 ```
 
 This ensures Traefik sees the real client IP instead of the pod/node IP.
 
 ## Storage configuration
 
-To store permanent data, I use k3s's bundled `rancher.io/local-path` provisioner via a custom `local-path-retain` StorageClass (`kube/local-path/storage-class.yaml`, `reclaimPolicy: Retain` so deleting a PVC never silently deletes its data). No extra provisioner install is needed — it ships with k3s. Since it's backed by a hostPath directory on whichever node the consuming pod first lands on (`volumeBindingMode: WaitForFirstConsumer`), a PVC's data is pinned to that node from then on; this is a non-issue on a single-node cluster, but matters if more nodes get added later.
+To store permanent data, I use k3s's bundled `rancher.io/local-path` provisioner via a custom `local-path-retain` StorageClass (`platform/local-path/storage-class.yaml`, `reclaimPolicy: Retain` so deleting a PVC never silently deletes its data). No extra provisioner install is needed — it ships with k3s. Since it's backed by a hostPath directory on whichever node the consuming pod first lands on (`volumeBindingMode: WaitForFirstConsumer`), a PVC's data is pinned to that node from then on; this is a non-issue on a single-node cluster, but matters if more nodes get added later.
 
 Several apps also mount statically-provisioned NFS `PersistentVolume`s (backed by a NAS). Every node needs the NFS client installed:
 ```bash
