@@ -25,15 +25,15 @@ spec:
         - name: TWINGATE_NETWORK
           valueFrom:
             secretKeyRef:
-              name: twingate-connector-data
+              name: twingate
               key: network
         - name: TWINGATE_ACCESS_TOKEN
           valueFrom:
             secretKeyRef:
-              name: twingate-connector-data
+              name: twingate
               key: access_token
         - name: TWINGATE_REFRESH_TOKEN
           valueFrom:
             secretKeyRef:
-              name: twingate-connector-data
+              name: twingate
               key: refresh_token
