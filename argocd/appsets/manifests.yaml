@@ -11,7 +11,7 @@ spec:
       repoURL: https://gitea.lazyduck.fr/nolhan/homelab
       revision: HEAD
       directories:
-      - path: apps/manifests/*
+      - path: apps/manifests/*  
   template:
     metadata:
       name: '{{.path.basename}}'
@@ -31,6 +31,9 @@ spec:
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
-        - RespectIgnoreDifferences=true
+        - RespectIgnoreDifferences=true 
+        automated:
+          selfHeal: true
+          prune: true
   syncPolicy: 
     preserveResourcesOnDeletion: true

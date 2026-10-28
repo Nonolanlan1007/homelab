@@ -1,3 +1,4 @@
+autoSync: false
 namespace: default
 source:
   chart: openbao

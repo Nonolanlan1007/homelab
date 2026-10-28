@@ -34,6 +34,11 @@ spec:
       ignoreDifferences: {{ toJson .ignoreDifferences }}
       {{- end }}
       syncPolicy:
+        {{- if or (not (hasKey . "autoSync")) .autoSync }}
+        automated:
+          selfHeal: true
+          prune: true
+        {{- end }}
         syncOptions:
         - CreateNamespace=true
         - ServerSideApply=true
