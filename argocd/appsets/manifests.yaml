@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: manifests
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: https://gitea.lazyduck.fr/nolhan/homelab
+      revision: HEAD
+      directories:
+      - path: apps/manifests/*
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+    spec:
+      project: homelab
+      source:
+        repoURL: https://gitea.lazyduck.fr/nolhan/homelab
+        targetRevision: HEAD
+        path: '{{.path.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      ignoreDifferences:
+      - kind: PersistentVolumeClaim
+        jqPathExpressions:
+          - .spec.volumeName
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+        - RespectIgnoreDifferences=true
+  syncPolicy: 
+    preserveResourcesOnDeletion: true

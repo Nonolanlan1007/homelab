@@ -1,0 +1,7 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    hosts:
+      core: harbor.lazyduck.fr
+externalURL: https://harbor.lazyduck.fr

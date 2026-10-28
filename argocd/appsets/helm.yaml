@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: https://gitea.lazyduck.fr/nolhan/homelab
+      revision: HEAD
+      files:
+      - path: apps/helm/*/config.yaml
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+    spec:
+      project: homelab
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+  templatePatch: |
+    spec:
+      sources:
+      - {{ toJson .source }}
+      - repoURL: https://gitea.lazyduck.fr/nolhan/homelab
+        targetRevision: HEAD
+        ref: repo
+        path: {{ .path.path }}
+        directory:
+          exclude: '{config.yaml,values.yaml}'
+      {{- if hasKey . "ignoreDifferences" }}
+      ignoreDifferences: {{ toJson .ignoreDifferences }}
+      {{- end }}
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+        - RespectIgnoreDifferences=true
+  syncPolicy:
+    preserveResourcesOnDeletion: true

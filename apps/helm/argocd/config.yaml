@@ -1,0 +1,10 @@
+namespace: argocd
+source:
+  chart: argo-cd
+  repoURL: https://argoproj.github.io/argo-helm
+  targetRevision: 10.11.6
+  helm:
+    releaseName: argocd
+    ignoreMissingValueFiles: true
+    valueFiles:
+    - $repo/apps/helm/argocd/values.yaml

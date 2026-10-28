@@ -1,0 +1,7 @@
+namespace: external-secrets
+source:
+  chart: external-secrets
+  repoURL: https://charts.external-secrets.io
+  targetRevision: 2.14.0
+  helm:
+    releaseName: external-secrets
