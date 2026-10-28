@@ -7,3 +7,22 @@ source:
     releaseName: harbor-chart
     valueFiles:
     - $repo/apps/helm/harbor/values.yaml
+ignoreDifferences:
+- kind: Secret
+  jqPathExpressions:
+  - .data
+  - .stringData
+- group: apps
+  kind: Deployment
+  jqPathExpressions:
+  - .spec.template.metadata.annotations."checksum/secret"
+  - .spec.template.metadata.annotations."checksum/secret-core"
+  - .spec.template.metadata.annotations."checksum/secret-jobservice"
+- group: apps
+  kind: StatefulSet
+  jqPathExpressions:
+  - .spec.template.metadata.annotations."checksum/secret"
+- kind: PersistentVolumeClaim
+  jqPathExpressions:
+  - .spec.volumeName
+  - .spec.storageClassName

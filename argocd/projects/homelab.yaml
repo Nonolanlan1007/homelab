@@ -9,6 +9,8 @@ spec:
     - https://gitea.lazyduck.fr/nolhan/homelab
     - https://openbao.github.io/openbao-helm
     - https://charts.external-secrets.io
+    - https://argoproj.github.io/argo-helm
+    - https://helm.goharbor.io
   destinations:
     - name: in-cluster
       namespace: '*'
