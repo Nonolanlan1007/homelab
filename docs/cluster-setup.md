@@ -42,7 +42,7 @@ kubectl wait -n metallb-system deployment controller --for=condition=Available -
 
 ### Configure MetalLB
 
-Apply `platform/traefik/metallb-config.yaml`. The IP pool must be a range of free, unassigned IPs that are outside your DHCP pool and not assigned to any node:
+Apply `platform/metallb/metallb-config.yaml`. The IP pool must be a range of free, unassigned IPs that are outside your DHCP pool and not assigned to any node:
 
 ```yaml
 apiVersion: metallb.io/v1beta1
