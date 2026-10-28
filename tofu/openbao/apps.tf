@@ -4,6 +4,58 @@ locals {
       service_account_name      = "twingate-sa"
       service_account_namespace = "default"
     }
+    affine = {
+      service_account_name      = "affine-sa"
+      service_account_namespace = "default"
+    }
+    authentik = {
+      service_account_name      = "authentik-sa"
+      service_account_namespace = "default"
+    }
+    convertx = {
+      service_account_name      = "convertx-sa"
+      service_account_namespace = "default"
+    }
+    gitea = {
+      service_account_name      = "gitea-sa"
+      service_account_namespace = "default"
+    }
+    immich = {
+      service_account_name      = "immich-sa"
+      service_account_namespace = "default"
+    }
+    linkwarden = {
+      service_account_name      = "linkwarden-sa"
+      service_account_namespace = "default"
+    }
+    matomo = {
+      service_account_name      = "matomo-sa"
+      service_account_namespace = "default"
+    }
+    matrix = {
+      service_account_name      = "matrix-sa"
+      service_account_namespace = "default"
+    }
+    paperless = {
+      service_account_name      = "paperless-sa"
+      service_account_namespace = "default"
+    }
+    qbittorrent = {
+      service_account_name      = "qbittorrent-sa"
+      service_account_namespace = "default"
+    }
+    seafile = {
+      service_account_name      = "seafile-sa"
+      service_account_namespace = "default"
+    }
+    sharry = {
+      service_account_name      = "sharry-sa"
+      service_account_namespace = "default"
+    }
+    vaultwarden = {
+      service_account_name      = "vaultwarden-sa"
+      service_account_namespace = "default"
+    }
   }
 }
 
