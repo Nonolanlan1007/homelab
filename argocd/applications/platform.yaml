@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  project: homelab
+  source:
+    repoURL: https://gitea.lazyduck.fr/nolhan/homelab
+    targetRevision: HEAD
+    path: platform
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
