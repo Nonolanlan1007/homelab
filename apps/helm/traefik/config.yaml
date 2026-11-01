@@ -1,0 +1,15 @@
+autoSync: false
+namespace: kube-system
+sources:
+- chart: traefik
+  repoURL: https://traefik.github.io/charts
+  targetRevision: 42.1.3
+  helm:
+    releaseName: traefik
+    valueFiles:
+    - $repo/apps/helm/traefik/values.yaml
+- chart: traefik-crds
+  repoURL: https://traefik.github.io/charts
+  targetRevision: 1.18.0
+  helm:
+    releaseName: traefik-crds

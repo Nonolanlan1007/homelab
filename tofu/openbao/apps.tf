@@ -52,6 +52,10 @@ locals {
       service_account_name      = "sharry-sa"
       service_account_namespace = "default"
     }
+    traefik = {
+      service_account_name      = "traefik-sa"
+      service_account_namespace = "kube-system"
+    }
     vaultwarden = {
       service_account_name      = "vaultwarden-sa"
       service_account_namespace = "default"
