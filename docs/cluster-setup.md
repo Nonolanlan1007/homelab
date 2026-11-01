@@ -7,7 +7,7 @@ This directory contains all the kubernetes config files required to maintain my 
 To make Kubernetes cluster deployment easier, I chose to use k3s which comes bundled with Traefik and Helm. You can initialize the first node using:
 
 ```bash
-curl -sfL https://get.k3s.io | sh -s - server --token=<CLUSTER_SETUP_TOKEN> --secrets-encryption --cluster-init
+curl -sfL https://get.k3s.io | sh -s - server --token=<CLUSTER_SETUP_TOKEN> --secrets-encryption --cluster-init --disable traefik
 ```
 
 You can then add 2 more nodes using the following command:
