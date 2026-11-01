@@ -13,3 +13,7 @@ sources:
   targetRevision: 1.18.0
   helm:
     releaseName: traefik-crds
+ignoreDifferences:
+- kind: PersistentVolumeClaim
+  jqPathExpressions:
+  - .spec.volumeName
