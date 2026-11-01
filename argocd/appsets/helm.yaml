@@ -23,7 +23,9 @@ spec:
   templatePatch: |
     spec:
       sources:
-      - {{ toJson .source }}
+      {{- range .sources }}
+      - {{ toJson . }}
+      {{- end }}
       - repoURL: https://gitea.lazyduck.fr/nolhan/homelab
         targetRevision: HEAD
         ref: repo

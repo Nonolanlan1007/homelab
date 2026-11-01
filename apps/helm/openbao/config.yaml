@@ -1,7 +1,7 @@
 autoSync: false
 namespace: default
-source:
-  chart: openbao
+sources:
+- chart: openbao
   repoURL: https://openbao.github.io/openbao-helm
   targetRevision: 0.30.6
   helm:
