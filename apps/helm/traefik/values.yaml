@@ -32,16 +32,8 @@ ports:
         idleTimeout: 600s
 
 providers:
-  kubernetesGateway:
-    enabled: true
   kubernetesCRD:
     allowCrossNamespace: true
-
-gateway:
-  listeners:
-    web:
-      namespacePolicy:
-        from: All
 
 certificatesResolvers:
   cloudflare:

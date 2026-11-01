@@ -8,11 +8,6 @@ sources:
     releaseName: traefik
     valueFiles:
     - $repo/apps/helm/traefik/values.yaml
-- chart: traefik-crds
-  repoURL: https://traefik.github.io/charts
-  targetRevision: 1.18.0
-  helm:
-    releaseName: traefik-crds
 ignoreDifferences:
 - kind: PersistentVolumeClaim
   jqPathExpressions:
