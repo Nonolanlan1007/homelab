@@ -36,7 +36,7 @@ spec:
             mountPath: /var/www/html
             subPath: app
       - name: db
-        image: mariadb:12.3.3
+        image: mariadb:13.0.2
         resources:
           requests:
             cpu: "20m"
