@@ -25,7 +25,7 @@ spec:
           claimName: adguard-pv-claim
       containers:
       - name: adguard
-        image: adguard/adguardhome:v0.107.79
+        image: adguard/adguardhome:v0.107.80
         resources:
           requests:
             cpu: "20m"
