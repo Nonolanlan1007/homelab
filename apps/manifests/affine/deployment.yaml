@@ -25,7 +25,7 @@ spec:
           claimName: affine-data-pvc
       initContainers:
       - name: redis
-        image: redis:8.10.1
+        image: redis:8.10.3
         restartPolicy: Always
         resources:
           requests:

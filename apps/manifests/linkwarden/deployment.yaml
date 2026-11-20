@@ -25,7 +25,7 @@ spec:
           claimName: linkwarden-data-pv-claim
       containers:
       - name: linkwarden
-        image: ghcr.io/linkwarden/linkwarden:v2.16.3
+        image: ghcr.io/linkwarden/linkwarden:v2.17.0
         resources:
           requests:
             cpu: "40m"
@@ -76,7 +76,7 @@ spec:
             subPath: postgres
 
       - name: meilisearch
-        image: getmeili/meilisearch:v1.54.0
+        image: getmeili/meilisearch:v1.57.0
         env:
           - name: MEILI_UPGRADE_DB
             value: "true"

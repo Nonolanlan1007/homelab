@@ -21,7 +21,7 @@ spec:
             claimName: portainer-pv-claim
       containers:
       - name: portainer
-        image: portainer/portainer-ce:2.45.1
+        image: portainer/portainer-ce:2.45.4
         resources:
           requests:
             cpu: "20m"
