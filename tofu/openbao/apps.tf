@@ -1,11 +1,11 @@
 locals {
   apps = {
-    twingate = {
-      service_account_name      = "twingate-sa"
-      service_account_namespace = "default"
-    }
     affine = {
       service_account_name      = "affine-sa"
+      service_account_namespace = "default"
+    }
+    atuin-server = {
+      service_account_name      = "atuin-server-sa"
       service_account_namespace = "default"
     }
     authentik = {
@@ -55,6 +55,10 @@ locals {
     traefik = {
       service_account_name      = "traefik-sa"
       service_account_namespace = "kube-system"
+    }
+    twingate = {
+      service_account_name      = "twingate-sa"
+      service_account_namespace = "default"
     }
     vaultwarden = {
       service_account_name      = "vaultwarden-sa"
