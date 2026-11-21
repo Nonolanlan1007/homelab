@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: atuin-server
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: cloudflare
+  routes:
+    - match: Host(`atuin.lazyduck.fr`)
+      kind: Rule
+      services:
+        - name: atuin-server
+          port: 8888
+      middlewares:
+        - name: internal-only
+          namespace: kube-system
