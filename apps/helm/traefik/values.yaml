@@ -17,6 +17,12 @@ ports:
     protocol: UDP
     expose:
       default: true
+  ldaps:
+    port: 8636
+    exposedPort: 636
+    protocol: TCP
+    expose:
+      default: true
   web:
     proxyProtocol:
       trustedIPs:
