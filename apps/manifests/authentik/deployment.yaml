@@ -16,6 +16,7 @@ spec:
       labels:
         app: authentik
     spec:
+      serviceAccountName: authentik-sa
       terminationGracePeriodSeconds: 120
       containers:
       - name: postgresql
